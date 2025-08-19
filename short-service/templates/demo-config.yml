@@ -3,4 +3,20 @@ kind: ConfigMap
 metadata:
   name: demo-config
 data:
-  key: {{ .Release.Name }}
+  name: {{ .Values.app.version | upper | quote }}
+  {{- if eq .Values.env "production" }}
+  paymentToken: "1234"
+  {{- else }}
+  paymentToken: false
+  {{- end }}
+  {{- with.Values.value.requirements.limits }}
+  memory: {{ .memory}}
+  cpu: {{ .cpu}}
+  version: {{ $.Release.Name }}
+  {{- end }}
+  {{- $map := .Release.Name | upper | quote }}
+  map: {{ $map }}
+  users: 
+    {{- range $index, $user := .Values.users }}
+    {{ $user.name }}: "{{ $user.role }} - {{ $index }}"
+    {{- end }}
