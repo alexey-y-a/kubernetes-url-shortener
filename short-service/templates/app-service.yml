@@ -5,7 +5,9 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: {{ .Values.app.port }}
+    - name: http
+      port: {{ .Values.app.port }}
+      targetPort: {{ .Values.app.port }}
       protocol: TCP
   selector:
     components: {{ .Values.app.components }}
