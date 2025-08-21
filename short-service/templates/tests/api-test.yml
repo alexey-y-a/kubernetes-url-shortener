@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ .Release.Name }}-api-test"
+  namespace: my-namespace
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  containers:
+    - name: test
+      image: alpine
+      command: ["sh", "-c"]
+      args:
+        - |
+          apk add --no-cache curl
+          echo "Testing API connection..."
+          curl -v -f http://short-api-clusterip:3000/
+          echo "Test completed successfully!"
+  restartPolicy: Never
